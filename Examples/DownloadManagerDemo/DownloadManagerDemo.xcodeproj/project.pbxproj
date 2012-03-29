@@ -1,0 +1,266 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50F1251B1524547500EB5995 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F1251A1524547500EB5995 /* UIKit.framework */; };
+		50F1251D1524547500EB5995 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F1251C1524547500EB5995 /* Foundation.framework */; };
+		50F1251F1524547500EB5995 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F1251E1524547500EB5995 /* CoreGraphics.framework */; };
+		50F125251524547500EB5995 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50F125231524547500EB5995 /* InfoPlist.strings */; };
+		50F125271524547500EB5995 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F125261524547500EB5995 /* main.m */; };
+		50F1252B1524547500EB5995 /* PTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1252A1524547500EB5995 /* PTAppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50F125161524547500EB5995 /* DownloadManagerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloadManagerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50F1251A1524547500EB5995 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		50F1251C1524547500EB5995 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		50F1251E1524547500EB5995 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		50F125221524547500EB5995 /* DownloadManagerDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DownloadManagerDemo-Info.plist"; sourceTree = "<group>"; };
+		50F125241524547500EB5995 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		50F125261524547500EB5995 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		50F125281524547500EB5995 /* DownloadManagerDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DownloadManagerDemo-Prefix.pch"; sourceTree = "<group>"; };
+		50F125291524547500EB5995 /* PTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTAppDelegate.h; sourceTree = "<group>"; };
+		50F1252A1524547500EB5995 /* PTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTAppDelegate.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		50F125131524547500EB5995 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50F1251B1524547500EB5995 /* UIKit.framework in Frameworks */,
+				50F1251D1524547500EB5995 /* Foundation.framework in Frameworks */,
+				50F1251F1524547500EB5995 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		50F1250B1524547500EB5995 = {
+			isa = PBXGroup;
+			children = (
+				50F125201524547500EB5995 /* DownloadManagerDemo */,
+				50F125191524547500EB5995 /* Frameworks */,
+				50F125171524547500EB5995 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		50F125171524547500EB5995 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				50F125161524547500EB5995 /* DownloadManagerDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50F125191524547500EB5995 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				50F1251A1524547500EB5995 /* UIKit.framework */,
+				50F1251C1524547500EB5995 /* Foundation.framework */,
+				50F1251E1524547500EB5995 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		50F125201524547500EB5995 /* DownloadManagerDemo */ = {
+			isa = PBXGroup;
+			children = (
+				50F125291524547500EB5995 /* PTAppDelegate.h */,
+				50F1252A1524547500EB5995 /* PTAppDelegate.m */,
+				50F125211524547500EB5995 /* Supporting Files */,
+			);
+			path = DownloadManagerDemo;
+			sourceTree = "<group>";
+		};
+		50F125211524547500EB5995 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				50F125221524547500EB5995 /* DownloadManagerDemo-Info.plist */,
+				50F125231524547500EB5995 /* InfoPlist.strings */,
+				50F125261524547500EB5995 /* main.m */,
+				50F125281524547500EB5995 /* DownloadManagerDemo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		50F125151524547500EB5995 /* DownloadManagerDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50F1252E1524547500EB5995 /* Build configuration list for PBXNativeTarget "DownloadManagerDemo" */;
+			buildPhases = (
+				50F125121524547500EB5995 /* Sources */,
+				50F125131524547500EB5995 /* Frameworks */,
+				50F125141524547500EB5995 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DownloadManagerDemo;
+			productName = DownloadManagerDemo;
+			productReference = 50F125161524547500EB5995 /* DownloadManagerDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		50F1250D1524547500EB5995 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = PT;
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Apex-net srl";
+			};
+			buildConfigurationList = 50F125101524547500EB5995 /* Build configuration list for PBXProject "DownloadManagerDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 50F1250B1524547500EB5995;
+			productRefGroup = 50F125171524547500EB5995 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				50F125151524547500EB5995 /* DownloadManagerDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		50F125141524547500EB5995 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50F125251524547500EB5995 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		50F125121524547500EB5995 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50F125271524547500EB5995 /* main.m in Sources */,
+				50F1252B1524547500EB5995 /* PTAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		50F125231524547500EB5995 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50F125241524547500EB5995 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		50F1252C1524547500EB5995 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		50F1252D1524547500EB5995 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		50F1252F1524547500EB5995 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DownloadManagerDemo/DownloadManagerDemo-Prefix.pch";
+				INFOPLIST_FILE = "DownloadManagerDemo/DownloadManagerDemo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		50F125301524547500EB5995 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DownloadManagerDemo/DownloadManagerDemo-Prefix.pch";
+				INFOPLIST_FILE = "DownloadManagerDemo/DownloadManagerDemo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		50F125101524547500EB5995 /* Build configuration list for PBXProject "DownloadManagerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50F1252C1524547500EB5995 /* Debug */,
+				50F1252D1524547500EB5995 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50F1252E1524547500EB5995 /* Build configuration list for PBXNativeTarget "DownloadManagerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50F1252F1524547500EB5995 /* Debug */,
+				50F125301524547500EB5995 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 50F1250D1524547500EB5995 /* Project object */;
+}
