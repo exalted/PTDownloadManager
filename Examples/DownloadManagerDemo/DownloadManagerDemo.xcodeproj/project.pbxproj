@@ -23,6 +23,8 @@
 		50F12558152458B400EB5995 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1254C152458B400EB5995 /* AFURLConnectionOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		50F12559152458B400EB5995 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1254E152458B400EB5995 /* AFXMLRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		50F1255A152458B400EB5995 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F12550152458B400EB5995 /* UIImageView+AFNetworking.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		50F1256215245E0700EB5995 /* PTDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1256115245E0700EB5995 /* PTDownloadManager.m */; };
+		50F1258B1524AA8A00EB5995 /* PTFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F1258A1524AA8A00EB5995 /* PTFile.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,10 @@
 		50F1254E152458B400EB5995 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		50F1254F152458B400EB5995 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		50F12550152458B400EB5995 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		50F1256015245E0700EB5995 /* PTDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTDownloadManager.h; sourceTree = "<group>"; };
+		50F1256115245E0700EB5995 /* PTDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDownloadManager.m; sourceTree = "<group>"; };
+		50F125891524AA8A00EB5995 /* PTFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFile.h; sourceTree = "<group>"; };
+		50F1258A1524AA8A00EB5995 /* PTFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTFile.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				50F125201524547500EB5995 /* DownloadManagerDemo */,
+				50F1255F15245A8D00EB5995 /* PTDownloadManager */,
 				50F1253A1524588D00EB5995 /* Libraries */,
 				50F125191524547500EB5995 /* Frameworks */,
 				50F125171524547500EB5995 /* Products */,
@@ -159,6 +166,18 @@
 			path = ../../Libraries/AFNetworking/AFNetworking;
 			sourceTree = "<group>";
 		};
+		50F1255F15245A8D00EB5995 /* PTDownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				50F1256015245E0700EB5995 /* PTDownloadManager.h */,
+				50F1256115245E0700EB5995 /* PTDownloadManager.m */,
+				50F125891524AA8A00EB5995 /* PTFile.h */,
+				50F1258A1524AA8A00EB5995 /* PTFile.m */,
+			);
+			name = PTDownloadManager;
+			path = ../../PTDownloadManager;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -234,6 +253,8 @@
 				50F12558152458B400EB5995 /* AFURLConnectionOperation.m in Sources */,
 				50F12559152458B400EB5995 /* AFXMLRequestOperation.m in Sources */,
 				50F1255A152458B400EB5995 /* UIImageView+AFNetworking.m in Sources */,
+				50F1256215245E0700EB5995 /* PTDownloadManager.m in Sources */,
+				50F1258B1524AA8A00EB5995 /* PTFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
