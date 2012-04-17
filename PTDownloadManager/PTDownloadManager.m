@@ -41,12 +41,14 @@
 
 @interface PTDownloadManager () {
     NSMutableDictionary *_libraryInfo;
+    NSOperationQueue *_downloadQueue;
 }
 
 @property (nonatomic, retain) NSString *diskCachePath;
 @property (nonatomic, retain) NSString *diskPath;
 
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
+@property (nonatomic, readonly) NSOperationQueue *downloadQueue;
 
 - (void)createDiskCachePath;
 - (void)saveLibraryInfo;
@@ -57,6 +59,7 @@
 
 @synthesize diskCachePath = _diskCachePath;
 @synthesize diskPath = _diskPath;
+@synthesize downloadQueue = _downloadQueue;
 
 + (PTDownloadManager *)sharedManager
 {
@@ -77,6 +80,7 @@
     if (self) {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         self.diskCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PTDownloadManager"];
+        _downloadQueue = [[NSOperationQueue alloc] init];
     }
     return self;
 }
@@ -130,27 +134,35 @@
     }
 }
 
-- (void)start
-{
-    // TODO missing implementation
-    // - if exceeded 'diskCapacity', do periodic maintenance to save up some disk space, deleting oldest files in the library by their 'date'
-}
-
 - (void)stop
 {
     // TODO incomplete implementation
     // - try to finish downloading files in the background (you have 10 minutes left, tic tac...)
 
     [self saveLibraryInfo];
+
+    [[self downloadQueue] setSuspended:YES];
+
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[self downloadQueue] cancelAllOperations];
+        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
 }
 
-- (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date
+- (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request
 {
-    NSMutableDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
-    
-    NSAssert(![files objectForKey:name], @"file name is used by another file, name must be unique across all files in the library.");
+    // TODO missing implementation
+    // - if exceeded 'diskCapacity', do periodic maintenance to save up some disk space, deleting oldest files in the library by their 'date'
 
+    NSMutableDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
+//    NSAssert(![files objectForKey:name], @"file name is used by another file, name must be unique across all files in the library.");
     [files setObject:date forKey:name];
+
+    NSMutableDictionary *urls = [self.libraryInfo objectForKey:kPTLibraryInfoRequestURLStringsKey];
+    [urls setObject:[[request URL] absoluteString] forKey:name];
+
+    [self saveLibraryInfo];
     
     return [[PTFile alloc] initWithName:name date:date];
 }

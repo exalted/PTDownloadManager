@@ -19,6 +19,7 @@
 #import "PTFile.h"
 
 #import "PTDownloadManager.h"
+#import "AFURLConnectionOperation.h"
 
 #define kPTLibraryInfoRequestURLStringsKey      @"urls"
 
@@ -29,6 +30,7 @@
 @interface PTDownloadManager ()
 
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
+@property (nonatomic, readonly) NSOperationQueue *downloadQueue;
 
 @end
 
@@ -57,16 +59,35 @@
     return self;
 }
 
-- (NSURLConnection *)downloadFileWithRequest:(NSURLRequest *)request delegate:(id<NSURLConnectionDelegate>)delegate
+- (NSOperation *)download
+{
+    return [self downloadWithProgressOnView:nil];
+}
+
+- (NSOperation *)downloadWithProgressOnView:(UIView *)view
 {
     NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
-    
-    NSAssert(![urls objectForKey:self.name], @"download request for this file is already queued.");
-    
-    [urls setObject:[[request URL] absoluteString] forKey:self.name];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
 
-    // TODO incomplete implementation
-    return nil;
+    AFURLConnectionOperation *downloadOperation = [[AFURLConnectionOperation alloc] initWithRequest:request];
+    [downloadOperation setDownloadProgressBlock:^(NSInteger bytesRead, NSInteger totalBytesRead, NSInteger totalBytesExpectedToRead) {
+        NSLog(@"--");
+        NSLog(@"bytesRead:                %d", bytesRead);
+        NSLog(@"totalBytesRead:           %d", totalBytesRead);
+        NSLog(@"totalBytesExpectedToRead: %d", totalBytesExpectedToRead);
+        NSLog(@"Progress:                 %.0f%%", (float)totalBytesRead/totalBytesExpectedToRead * 100);
+    }];
+    [downloadOperation setCompletionBlock:^{
+        NSLog(@"--");
+        NSLog(@"Done.");
+    }];
+//    NSLog(@"Start...");
+//    [foo start];
+
+    NSLog(@"Queue download...");
+    [[[PTDownloadManager sharedManager] downloadQueue] addOperation:downloadOperation];
+    
+    return downloadOperation;
 }
 
 @end

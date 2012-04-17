@@ -23,6 +23,7 @@
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSDate *date;
 
-- (NSURLConnection *)downloadFileWithRequest:(NSURLRequest *)request delegate:(id<NSURLConnectionDelegate>)delegate;
+- (NSOperation *)download;
+- (NSOperation *)downloadWithProgressOnView:(UIView *)view;
 
 @end
