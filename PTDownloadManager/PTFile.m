@@ -79,8 +79,16 @@
     downloadOperation.allowResumeForFileDownloads = YES;
     downloadOperation.shouldContinueWhenAppEntersBackground = YES;
 
-    UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-    [downloadOperation setDownloadProgressDelegate:progressView];
+    if (view) {
+        UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        progressView.frame = CGRectMake(5.0,
+                                        view.bounds.size.height - progressView.frame.size.height - 5.0,
+                                        view.bounds.size.width - 10.0,
+                                        progressView.frame.size.height);
+        [view addSubview:progressView];
+
+        [downloadOperation setDownloadProgressDelegate:progressView];
+    }
 
     [[[PTDownloadManager sharedManager] downloadQueue] addOperation:downloadOperation];
     

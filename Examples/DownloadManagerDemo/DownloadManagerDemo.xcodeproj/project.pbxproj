@@ -20,6 +20,9 @@
 		50629332153DC3BD0052C1F6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50629331153DC3BD0052C1F6 /* SystemConfiguration.framework */; };
 		50629334153DC3C30052C1F6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50629333153DC3C30052C1F6 /* MobileCoreServices.framework */; };
 		50629336153DC3DD0052C1F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 50629335153DC3DD0052C1F6 /* libz.dylib */; };
+		5062933E153EEBDA0052C1F6 /* PTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5062933C153EEBDA0052C1F6 /* PTRootViewController.m */; };
+		5062933F153EEBDA0052C1F6 /* PTRootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5062933D153EEBDA0052C1F6 /* PTRootViewController.xib */; };
+		50629342153EF44D0052C1F6 /* Tree.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 50629341153EF44D0052C1F6 /* Tree.jpg */; };
 		50F1251B1524547500EB5995 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F1251A1524547500EB5995 /* UIKit.framework */; };
 		50F1251D1524547500EB5995 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F1251C1524547500EB5995 /* Foundation.framework */; };
 		50F1251F1524547500EB5995 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F1251E1524547500EB5995 /* CoreGraphics.framework */; };
@@ -57,6 +60,10 @@
 		50629331153DC3BD0052C1F6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		50629333153DC3C30052C1F6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		50629335153DC3DD0052C1F6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		5062933B153EEBDA0052C1F6 /* PTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTRootViewController.h; sourceTree = "<group>"; };
+		5062933C153EEBDA0052C1F6 /* PTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTRootViewController.m; sourceTree = "<group>"; };
+		5062933D153EEBDA0052C1F6 /* PTRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTRootViewController.xib; sourceTree = "<group>"; };
+		50629341153EF44D0052C1F6 /* Tree.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Tree.jpg; sourceTree = "<group>"; };
 		50F125161524547500EB5995 /* DownloadManagerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloadManagerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50F1251A1524547500EB5995 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		50F1251C1524547500EB5995 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -167,6 +174,9 @@
 			children = (
 				50F125291524547500EB5995 /* PTAppDelegate.h */,
 				50F1252A1524547500EB5995 /* PTAppDelegate.m */,
+				5062933B153EEBDA0052C1F6 /* PTRootViewController.h */,
+				5062933C153EEBDA0052C1F6 /* PTRootViewController.m */,
+				5062933D153EEBDA0052C1F6 /* PTRootViewController.xib */,
 				50F125211524547500EB5995 /* Supporting Files */,
 			);
 			path = DownloadManagerDemo;
@@ -175,6 +185,7 @@
 		50F125211524547500EB5995 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				50629341153EF44D0052C1F6 /* Tree.jpg */,
 				50F125221524547500EB5995 /* DownloadManagerDemo-Info.plist */,
 				50F125231524547500EB5995 /* InfoPlist.strings */,
 				50F125261524547500EB5995 /* main.m */,
@@ -257,6 +268,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				50F125251524547500EB5995 /* InfoPlist.strings in Resources */,
+				5062933F153EEBDA0052C1F6 /* PTRootViewController.xib in Resources */,
+				50629342153EF44D0052C1F6 /* Tree.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +293,7 @@
 				5062932C153DC37F0052C1F6 /* ASIHTTPRequest.m in Sources */,
 				5062932D153DC37F0052C1F6 /* ASIInputStream.m in Sources */,
 				5062932E153DC37F0052C1F6 /* ASINetworkQueue.m in Sources */,
+				5062933E153EEBDA0052C1F6 /* PTRootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

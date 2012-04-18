@@ -18,6 +18,8 @@
 
 #import "PTAppDelegate.h"
 
+#import "PTRootViewController.h"
+
 @implementation PTAppDelegate
 
 @synthesize window = _window;
@@ -26,7 +28,10 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    
+    PTRootViewController *rootViewController = [[PTRootViewController alloc] initWithNibName:@"PTRootViewController" bundle:nil];
+    self.window.rootViewController = rootViewController;
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
