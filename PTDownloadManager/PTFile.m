@@ -18,8 +18,10 @@
 
 #import "PTFile.h"
 
-#import "PTDownloadManager.h"
 #import "ASIHTTPRequest.h"
+#import "ASINetworkQueue.h"
+
+#import "PTDownloadManager.h"
 
 #define kPTLibraryInfoRequestURLStringsKey      @"urls"
 
