@@ -19,7 +19,7 @@
 #import "PTFile.h"
 
 #import "PTDownloadManager.h"
-#import "AFURLConnectionOperation.h"
+#import "ASIHTTPRequest.h"
 
 #define kPTLibraryInfoRequestURLStringsKey      @"urls"
 
@@ -67,23 +67,33 @@
 - (NSOperation *)downloadWithProgressOnView:(UIView *)view
 {
     NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
-
-    AFURLConnectionOperation *downloadOperation = [[AFURLConnectionOperation alloc] initWithRequest:request];
-    [downloadOperation setDownloadProgressBlock:^(NSInteger bytesRead, NSInteger totalBytesRead, NSInteger totalBytesExpectedToRead) {
-        NSLog(@"--");
-        NSLog(@"bytesRead:                %d", bytesRead);
-        NSLog(@"totalBytesRead:           %d", totalBytesRead);
-        NSLog(@"totalBytesExpectedToRead: %d", totalBytesExpectedToRead);
-        NSLog(@"Progress:                 %.0f%%", (float)totalBytesRead/totalBytesExpectedToRead * 100);
+    
+    ASIHTTPRequest *downloadOperation = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
+    __weak ASIHTTPRequest *_request = downloadOperation;
+    UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    [downloadOperation setDownloadProgressDelegate:progressView];
+    [downloadOperation setBytesReceivedBlock:^(unsigned long long size, unsigned long long total) {
+//        NSLog(@"--");
+//        NSLog(@"totalBytesRead:           %llu", size);
+//        NSLog(@"totalBytesExpectedToRead: %llu", total);
+//        NSLog(@"Progress:                 %.0f%%", (float)size/total * 100);
+        NSLog(@"Progress: %.0f%%", [progressView progress] * 100);
+    }];
+    [downloadOperation setDownloadSizeIncrementedBlock:^(long long size) {
+        NSLog(@">>> %llu", size);
     }];
     [downloadOperation setCompletionBlock:^{
         NSLog(@"--");
         NSLog(@"Done.");
     }];
-//    NSLog(@"Start...");
-//    [foo start];
-
+    [downloadOperation setFailedBlock:^{
+        NSError *error = [_request error];
+        if (error) {
+            NSLog(@"--");
+            NSLog(@"Error: %@", [error localizedDescription]);
+        }
+    }];
+    
     NSLog(@"Queue download...");
     [[[PTDownloadManager sharedManager] downloadQueue] addOperation:downloadOperation];
     
