@@ -143,7 +143,7 @@
     // - if exceeded 'diskCapacity', do periodic maintenance to save up some disk space, deleting oldest files in the library by their 'date'
 
     NSMutableDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
-//    NSAssert(![files objectForKey:name], @"file name is used by another file, name must be unique across all files in the library.");
+    NSAssert(![files objectForKey:name], @"file name is used by another file, name must be unique across all files in the library.");
     [files setObject:date forKey:name];
 
     NSMutableDictionary *urls = [self.libraryInfo objectForKey:kPTLibraryInfoRequestURLStringsKey];
