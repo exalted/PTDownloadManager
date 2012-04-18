@@ -52,7 +52,7 @@
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
 @property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
 
-- (void)createDiskCachePath;
+- (void)createDirectoryAtPath:(NSString *)path;
 - (void)saveLibraryInfo;
 
 @end
@@ -114,11 +114,11 @@
     return _libraryInfo;
 }
 
-- (void)createDiskCachePath
+- (void)createDirectoryAtPath:(NSString *)path
 {
     NSFileManager *fileManager = [[NSFileManager alloc] init];
-    if (![fileManager fileExistsAtPath:self.diskCachePath]) {
-        [fileManager createDirectoryAtPath:self.diskCachePath
+    if (![fileManager fileExistsAtPath:path]) {
+        [fileManager createDirectoryAtPath:path
                withIntermediateDirectories:YES
                                 attributes:nil
                                      error:NULL];
@@ -127,7 +127,7 @@
 
 - (void)saveLibraryInfo
 {
-    [self createDiskCachePath];
+    [self createDirectoryAtPath:self.diskCachePath];
     
     NSData *data = [NSPropertyListSerialization dataWithPropertyList:self.libraryInfo format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
     if (data) {
