@@ -18,6 +18,8 @@
 
 #import "PTDownloadManager.h"
 
+#import "ASINetworkQueue.h"
+
 #define kPTLibraryInfoFileName                  @"libraryInfo.plist"
 #define kPTLibraryInfoFilesKey                  @"files"
 #define kPTLibraryInfoRequestURLStringsKey      @"urls"
@@ -41,14 +43,14 @@
 
 @interface PTDownloadManager () {
     NSMutableDictionary *_libraryInfo;
-    NSOperationQueue *_downloadQueue;
+    ASINetworkQueue *_downloadQueue;
 }
 
 @property (nonatomic, retain) NSString *diskCachePath;
 @property (nonatomic, retain) NSString *diskPath;
 
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
-@property (nonatomic, readonly) NSOperationQueue *downloadQueue;
+@property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
 
 - (void)createDiskCachePath;
 - (void)saveLibraryInfo;
@@ -80,7 +82,10 @@
     if (self) {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         _diskCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PTDownloadManager"];
-        _downloadQueue = [[NSOperationQueue alloc] init];
+
+        _downloadQueue = [ASINetworkQueue queue];
+        _downloadQueue.shouldCancelAllRequestsOnFailure = NO;
+        [_downloadQueue go];
     }
     return self;
 }
@@ -136,15 +141,17 @@
 
 - (void)stop
 {
-    // TODO incomplete implementation
-    // - try to finish downloading files in the background (you have 10 minutes left, tic tac...)
-
     [self saveLibraryInfo];
 
-    [[self downloadQueue] setSuspended:YES];
+    // stop scheduling queued operations for execution
+    [self.downloadQueue setSuspended:YES];
 
+    // attempt to complete previously executed downloads in a background task
     __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        [[self downloadQueue] cancelAllOperations];
+        // application’s remaining background time reached 0: cancel all operations, clear delegates, and suspend operation
+        [self.downloadQueue reset];
+        
+        // end the background task
         [[UIApplication sharedApplication] endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];

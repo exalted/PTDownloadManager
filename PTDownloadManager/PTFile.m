@@ -30,7 +30,7 @@
 @interface PTDownloadManager ()
 
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
-@property (nonatomic, readonly) NSOperationQueue *downloadQueue;
+@property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
 
 @end
 
