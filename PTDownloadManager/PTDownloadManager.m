@@ -84,6 +84,7 @@
         _diskCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PTDownloadManager"];
 
         _downloadQueue = [ASINetworkQueue queue];
+        _downloadQueue.showAccurateProgress = YES;
         _downloadQueue.shouldCancelAllRequestsOnFailure = NO;
         [_downloadQueue go];
     }
