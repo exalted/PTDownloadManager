@@ -90,11 +90,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [self stop];
-}
-
 - (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path
 {
     // TODO missing implementation
@@ -137,24 +132,6 @@
     if (data) {
         [data writeToFile:[self.diskCachePath stringByAppendingPathComponent:kPTLibraryInfoFileName] atomically:YES];
     }
-}
-
-- (void)stop
-{
-    [self saveLibraryInfo];
-
-    // stop scheduling queued operations for execution
-    [self.downloadQueue setSuspended:YES];
-
-    // attempt to complete previously executed downloads in a background task
-    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        // application’s remaining background time reached 0: cancel all operations, clear delegates, and suspend operation
-        [self.downloadQueue reset];
-        
-        // end the background task
-        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
 }
 
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request

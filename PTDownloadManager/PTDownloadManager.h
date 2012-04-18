@@ -26,8 +26,6 @@
 
 - (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path;
 
-- (void)stop;
-
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request;
 
 @end
