@@ -106,7 +106,7 @@
 - (NSMutableDictionary *)libraryInfo
 {
     if (!_libraryInfo) {
-        _libraryInfo = [[NSMutableDictionary alloc] initWithContentsOfFile:[[[PTDownloadManager sharedManager] diskCachePath] stringByAppendingPathComponent:kPTLibraryInfoFileName]];
+        _libraryInfo = [[NSMutableDictionary alloc] initWithContentsOfFile:[self.diskCachePath stringByAppendingPathComponent:kPTLibraryInfoFileName]];
         if (!_libraryInfo) {
             _libraryInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                             [NSMutableDictionary dictionary], kPTLibraryInfoFilesKey,
