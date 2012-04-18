@@ -64,6 +64,11 @@
     return self;
 }
 
+- (NSURL *)contentURL
+{
+    return [NSURL fileURLWithPath:[[[PTDownloadManager sharedManager] diskPath] stringByAppendingPathComponent:self.name]];
+}
+
 - (NSOperation *)download
 {
     return [self downloadWithProgressOnView:nil];

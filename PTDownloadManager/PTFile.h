@@ -20,6 +20,9 @@
 
 @interface PTFile : NSObject
 
+// the location where file content should be stored
+@property(nonatomic, readonly) NSURL *contentURL;
+
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSDate *date;
 

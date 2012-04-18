@@ -27,5 +27,9 @@
 - (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path;
 
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request;
+- (void)removeFile:(PTFile *)file;
+- (PTFile *)fileWithName:(NSString *)name;
+
+@property(nonatomic, readonly) NSArray *files;
 
 @end

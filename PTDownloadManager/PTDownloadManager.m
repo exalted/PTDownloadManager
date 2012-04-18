@@ -19,6 +19,7 @@
 #import "PTDownloadManager.h"
 
 #import "ASINetworkQueue.h"
+#import "ASIHTTPRequest.h"
 
 #define kPTLibraryInfoFileName                  @"libraryInfo.plist"
 #define kPTLibraryInfoFilesKey                  @"files"
@@ -91,6 +92,18 @@
     return self;
 }
 
+- (NSArray *)files
+{
+    NSMutableArray *result = [NSMutableArray array];
+    
+    NSArray *allKeys = [[self.libraryInfo objectForKey:kPTLibraryInfoFilesKey] allKeys];
+    for (int i = 0; i < allKeys.count; i++) {
+        [result addObject:[self fileWithName:[allKeys objectAtIndex:i]]];
+    }
+    
+    return result;
+}
+
 - (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path
 {
     // TODO missing implementation
@@ -152,6 +165,34 @@
     [self saveLibraryInfo];
     
     return [[PTFile alloc] initWithName:name date:date];
+}
+
+- (void)removeFile:(PTFile *)file
+{
+    NSMutableDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
+    NSMutableDictionary *urls = [self.libraryInfo objectForKey:kPTLibraryInfoRequestURLStringsKey];
+    
+    for (int i = 0; i < self.downloadQueue.requestsCount; i++) {
+        ASIHTTPRequest *request = [self.downloadQueue.operations objectAtIndex:i];
+        if ([request.originalURL.absoluteString isEqualToString:[urls objectForKey:file.name]]) {
+            [request cancel];
+            [request removeTemporaryDownloadFile];
+        }
+    }
+
+    [files removeObjectForKey:file.name];
+    [urls removeObjectForKey:file.name];
+    
+    [self saveLibraryInfo];
+
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    [fileManager removeItemAtURL:file.contentURL error:NULL];
+}
+
+- (PTFile *)fileWithName:(NSString *)name
+{
+    NSDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
+    return [files objectForKey:name] ? [[PTFile alloc] initWithName:name date:[files objectForKey:name]] : nil;
 }
 
 @end
