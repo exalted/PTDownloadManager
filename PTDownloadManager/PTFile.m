@@ -31,6 +31,9 @@
 
 @interface PTDownloadManager ()
 
+@property (nonatomic, readonly) NSString *diskCachePath;
+@property (nonatomic, readonly) NSString *diskPath;
+
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
 @property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
 
@@ -71,32 +74,14 @@
     NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
     
     ASIHTTPRequest *downloadOperation = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
-    __weak ASIHTTPRequest *_request = downloadOperation;
+    downloadOperation.temporaryFileDownloadPath = [[[[PTDownloadManager sharedManager] diskCachePath] stringByAppendingPathComponent:self.name] stringByAppendingPathExtension:@"download"];
+    downloadOperation.downloadDestinationPath = [[[PTDownloadManager sharedManager] diskPath] stringByAppendingPathComponent:self.name];
+    downloadOperation.allowResumeForFileDownloads = YES;
+    downloadOperation.shouldContinueWhenAppEntersBackground = YES;
+
     UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     [downloadOperation setDownloadProgressDelegate:progressView];
-    [downloadOperation setBytesReceivedBlock:^(unsigned long long size, unsigned long long total) {
-//        NSLog(@"--");
-//        NSLog(@"totalBytesRead:           %llu", size);
-//        NSLog(@"totalBytesExpectedToRead: %llu", total);
-//        NSLog(@"Progress:                 %.0f%%", (float)size/total * 100);
-        NSLog(@"Progress: %.0f%%", [progressView progress] * 100);
-    }];
-    [downloadOperation setDownloadSizeIncrementedBlock:^(long long size) {
-        NSLog(@">>> %llu", size);
-    }];
-    [downloadOperation setCompletionBlock:^{
-        NSLog(@"--");
-        NSLog(@"Done.");
-    }];
-    [downloadOperation setFailedBlock:^{
-        NSError *error = [_request error];
-        if (error) {
-            NSLog(@"--");
-            NSLog(@"Error: %@", [error localizedDescription]);
-        }
-    }];
-    
-    NSLog(@"Queue download...");
+
     [[[PTDownloadManager sharedManager] downloadQueue] addOperation:downloadOperation];
     
     return downloadOperation;

@@ -137,6 +137,8 @@
 
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request
 {
+    [self createDirectoryAtPath:self.diskPath];
+    
     // TODO missing implementation
     // - if exceeded 'diskCapacity', do periodic maintenance to save up some disk space, deleting oldest files in the library by their 'date'
 
