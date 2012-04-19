@@ -69,6 +69,27 @@
     return [NSURL fileURLWithPath:[[[PTDownloadManager sharedManager] diskPath] stringByAppendingPathComponent:self.name]];
 }
 
+- (PTFileContentStatus)status
+{
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    if ([fileManager fileExistsAtPath:[self.contentURL path]]) {
+        return PTFileContentStatusAvailable;
+    }
+    else {
+        NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
+        for (int i = 0; i < [[[PTDownloadManager sharedManager] downloadQueue] requestsCount]; i++) {
+            ASIHTTPRequest *request = [[[[PTDownloadManager sharedManager] downloadQueue] operations] objectAtIndex:i];
+            if ([request.originalURL.absoluteString isEqualToString:[urls objectForKey:self.name]]) {
+                if ([request isExecuting]) {
+                    return PTFileContentStatusDownloading;
+                }
+            }
+        }
+    }
+    
+    return PTFileContentStatusNone;
+}
+
 - (NSOperation *)download
 {
     return [self downloadWithProgressOnView:nil];

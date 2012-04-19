@@ -18,11 +18,18 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum {
+    PTFileContentStatusNone,
+    PTFileContentStatusDownloading,
+    PTFileContentStatusAvailable,
+} PTFileContentStatus;
+
 @interface PTFile : NSObject
 
 // the location where file content should be stored
 @property(nonatomic, readonly) NSURL *contentURL;
 
+@property (nonatomic, readonly) PTFileContentStatus status;
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSDate *date;
 
