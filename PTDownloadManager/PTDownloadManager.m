@@ -177,6 +177,7 @@
         if ([request.originalURL.absoluteString isEqualToString:[urls objectForKey:file.name]]) {
             [request cancel];
             [request removeTemporaryDownloadFile];
+            break;
         }
     }
 

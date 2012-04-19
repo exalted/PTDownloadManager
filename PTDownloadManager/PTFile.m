@@ -90,6 +90,7 @@
             for (UIView *subView in view.subviews) {
                 if ([subView isKindOfClass:[UIProgressView class]]) {
                     [subView removeFromSuperview];
+                    break;
                 }
             }
         }
@@ -99,6 +100,7 @@
             for (UIView *subView in view.subviews) {
                 if ([subView isKindOfClass:[UIProgressView class]]) {
                     [subView removeFromSuperview];
+                    break;
                 }
             }
         }
