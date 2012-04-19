@@ -83,6 +83,27 @@
     downloadOperation.downloadDestinationPath = [[[PTDownloadManager sharedManager] diskPath] stringByAppendingPathComponent:self.name];
     downloadOperation.allowResumeForFileDownloads = YES;
     downloadOperation.shouldContinueWhenAppEntersBackground = YES;
+    // TODO remove duplicate
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    [downloadOperation setCompletionBlock:^{
+        if (view) {
+            for (UIView *subView in view.subviews) {
+                if ([subView isKindOfClass:[UIProgressView class]]) {
+                    [subView removeFromSuperview];
+                }
+            }
+        }
+    }];
+    [downloadOperation setFailedBlock:^{
+        if (view) {
+            for (UIView *subView in view.subviews) {
+                if ([subView isKindOfClass:[UIProgressView class]]) {
+                    [subView removeFromSuperview];
+                }
+            }
+        }
+    }];
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     if (view) {
         UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
