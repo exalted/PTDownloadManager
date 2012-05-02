@@ -30,7 +30,7 @@
 @interface PTDownloadManager ()
 
 @property (nonatomic, readonly) NSString *diskCachePath;
-@property (nonatomic, readonly) NSString *diskPath;
+@property (nonatomic, readonly) NSString *fileDownloadPath;
 
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
 @property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
@@ -64,7 +64,7 @@
 
 - (NSURL *)contentURL
 {
-    return [NSURL fileURLWithPath:[[[PTDownloadManager sharedManager] diskPath] stringByAppendingPathComponent:self.name]];
+    return [NSURL fileURLWithPath:[[[PTDownloadManager sharedManager] fileDownloadPath] stringByAppendingPathComponent:self.name]];
 }
 
 - (PTFileContentStatus)status
@@ -99,7 +99,7 @@
     
     ASIHTTPRequest *downloadOperation = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
     downloadOperation.temporaryFileDownloadPath = [[[[PTDownloadManager sharedManager] diskCachePath] stringByAppendingPathComponent:self.name] stringByAppendingPathExtension:@"download"];
-    downloadOperation.downloadDestinationPath = [[[PTDownloadManager sharedManager] diskPath] stringByAppendingPathComponent:self.name];
+    downloadOperation.downloadDestinationPath = [[[PTDownloadManager sharedManager] fileDownloadPath] stringByAppendingPathComponent:self.name];
     downloadOperation.allowResumeForFileDownloads = YES;
     downloadOperation.shouldContinueWhenAppEntersBackground = YES;
     // TODO remove duplicate

@@ -46,7 +46,7 @@
 }
 
 @property (nonatomic, retain) NSString *diskCachePath;
-@property (nonatomic, retain) NSString *diskPath;
+@property (nonatomic, retain) NSString *fileDownloadPath;
 
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
 @property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
@@ -59,7 +59,7 @@
 @implementation PTDownloadManager
 
 @synthesize diskCachePath = _diskCachePath;
-@synthesize diskPath = _diskPath;
+@synthesize fileDownloadPath = _fileDownloadPath;
 @synthesize downloadQueue = _downloadQueue;
 
 + (PTDownloadManager *)sharedManager
@@ -68,9 +68,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[PTDownloadManager alloc] init];
-
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES);
-        sharedInstance.diskPath = [paths objectAtIndex:0];
     });
     return sharedInstance;
 }
@@ -79,8 +76,10 @@
 {
     self = [super init];
     if (self) {
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        _diskCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PTDownloadManager"];
+        NSString *defaultPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+                                 stringByAppendingPathComponent:@"PTDownloadManager"];
+        _diskCachePath = defaultPath;
+        _fileDownloadPath = defaultPath;
 
         _downloadQueue = [ASINetworkQueue queue];
         _downloadQueue.showAccurateProgress = YES;
@@ -102,12 +101,12 @@
     return result;
 }
 
-- (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path
+- (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity andFileDownloadPath:(NSString *)path
 {
     // TODO missing implementation
     NSAssert(diskCapacity == 0, @"disk capacity is currently unused and should be set to 0.");
     
-    self.diskPath = path;
+    self.fileDownloadPath = path;
 }
 
 - (NSMutableDictionary *)libraryInfo
@@ -148,7 +147,7 @@
 
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request
 {
-    [self createDirectoryAtPath:self.diskPath];
+    [self createDirectoryAtPath:self.fileDownloadPath];
     
     // TODO missing implementation
     // - if exceeded 'diskCapacity', do periodic maintenance to save up some disk space, deleting oldest files in the library by their 'date'

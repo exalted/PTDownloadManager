@@ -22,7 +22,7 @@
 
 + (PTDownloadManager *)sharedManager;
 
-- (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity diskPath:(NSString *)path;
+- (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity andFileDownloadPath:(NSString *)path;
 
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request;
 - (void)removeFile:(PTFile *)file;
