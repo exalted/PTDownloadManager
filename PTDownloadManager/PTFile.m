@@ -98,7 +98,7 @@
     NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
     
     ASIHTTPRequest *downloadOperation = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
-    downloadOperation.temporaryFileDownloadPath = [[[[PTDownloadManager sharedManager] diskCachePath] stringByAppendingPathComponent:self.name] stringByAppendingPathExtension:@"download"];
+    downloadOperation.temporaryFileDownloadPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:self.name] stringByAppendingPathExtension:@"download"];
     downloadOperation.downloadDestinationPath = [[[PTDownloadManager sharedManager] fileDownloadPath] stringByAppendingPathComponent:self.name];
     downloadOperation.allowResumeForFileDownloads = YES;
     downloadOperation.shouldContinueWhenAppEntersBackground = YES;
