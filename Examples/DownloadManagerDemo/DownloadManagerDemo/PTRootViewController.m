@@ -63,12 +63,6 @@
         PTFile *file = [[PTDownloadManager sharedManager] addFileWithName:@"divisorio.pdf" date:[NSDate date] request:request];
         [file download];
         [file showProgressOnView:self.imageView label:self.downloadLabel];
-        double delayInSeconds = 20.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            NSLog(@"HEY!");
-            [file showProgressOnView:self.imageView label:self.downloadLabel];
-        });
         ////////////////////////////////////////////////////////////////////////
     });
 }
