@@ -25,6 +25,7 @@
 @implementation PTRootViewController
 
 @synthesize imageView;
+@synthesize downloadLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,6 +48,7 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
     [self setImageView:nil];
+    [self setDownloadLabel:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -59,7 +61,14 @@
         ////////////////////////////////////////////////////////////////////////
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bit.ly/HTAA1e"]];
         PTFile *file = [[PTDownloadManager sharedManager] addFileWithName:@"divisorio.pdf" date:[NSDate date] request:request];
-        [file downloadWithProgressOnView:self.imageView];
+        [file download];
+        [file showProgressOnView:self.imageView label:self.downloadLabel];
+        double delayInSeconds = 20.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            NSLog(@"HEY!");
+            [file showProgressOnView:self.imageView label:self.downloadLabel];
+        });
         ////////////////////////////////////////////////////////////////////////
     });
 }
@@ -73,7 +82,8 @@
     ////////////////////////////////////////////////////////////////////////////
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://bit.ly/JcwvQ9"]];
     PTFile *file = [[PTDownloadManager sharedManager] addFileWithName:@"poliespanso.mp4" date:[NSDate date] request:request];
-    [file downloadWithProgressOnView:sender];
+    [file showProgressOnView:sender label:nil];
+    [file download];
     ////////////////////////////////////////////////////////////////////////////
 }
 

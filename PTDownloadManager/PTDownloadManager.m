@@ -30,7 +30,6 @@
 @interface PTFile ()
 
 @property (nonatomic) NSString *name;
-@property (nonatomic) NSDate *date;
 
 - (id)initWithName:(NSString *)name date:(NSDate *)date;
 
@@ -51,8 +50,9 @@
 @property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
 @property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
 
-- (void)createDirectoryAtPath:(NSString *)path;
 - (void)saveLibraryInfo;
+- (void)createDirectoryAtPath:(NSString *)path;
+- (ASIHTTPRequest *)requestForFile:(PTFile *)file;
 
 @end
 
@@ -93,56 +93,20 @@
 {
     NSMutableArray *result = [NSMutableArray array];
     
-    NSArray *allKeys = [[self.libraryInfo objectForKey:kPTLibraryInfoFilesKey] allKeys];
-    for (int i = 0; i < allKeys.count; i++) {
-        [result addObject:[self fileWithName:[allKeys objectAtIndex:i]]];
+    NSArray *fileNames = [[self.libraryInfo objectForKey:kPTLibraryInfoFilesKey] allKeys];
+    for (NSString *name in fileNames) {
+        [result addObject:[self fileWithName:name]];
     }
     
     return result;
 }
 
-- (void)changeDefaultsWithDiskCapacity:(NSUInteger)diskCapacity andFileDownloadPath:(NSString *)path
+- (void)changeDiskCapacity:(NSUInteger)diskCapacity andFileDownloadPath:(NSString *)path
 {
     // TODO missing implementation
     NSAssert(diskCapacity == 0, @"disk capacity is currently unused and should be set to 0.");
     
     self.fileDownloadPath = path;
-}
-
-- (NSMutableDictionary *)libraryInfo
-{
-    if (!_libraryInfo) {
-        _libraryInfo = [[NSMutableDictionary alloc] initWithContentsOfFile:[self.diskCachePath stringByAppendingPathComponent:kPTLibraryInfoFileName]];
-        if (!_libraryInfo) {
-            _libraryInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                            [NSMutableDictionary dictionary], kPTLibraryInfoFilesKey,
-                            [NSMutableDictionary dictionary], kPTLibraryInfoRequestURLStringsKey,
-                            nil];
-        }
-    }
-    
-    return _libraryInfo;
-}
-
-- (void)createDirectoryAtPath:(NSString *)path
-{
-    NSFileManager *fileManager = [[NSFileManager alloc] init];
-    if (![fileManager fileExistsAtPath:path]) {
-        [fileManager createDirectoryAtPath:path
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:NULL];
-    }
-}
-
-- (void)saveLibraryInfo
-{
-    [self createDirectoryAtPath:self.diskCachePath];
-    
-    NSData *data = [NSPropertyListSerialization dataWithPropertyList:self.libraryInfo format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
-    if (data) {
-        [data writeToFile:[self.diskCachePath stringByAppendingPathComponent:kPTLibraryInfoFileName] atomically:YES];
-    }
 }
 
 - (PTFile *)addFileWithName:(NSString *)name date:(NSDate *)date request:(NSURLRequest *)request
@@ -161,25 +125,19 @@
 
     [self saveLibraryInfo];
     
-    return [[PTFile alloc] initWithName:name date:date];
+    return [self fileWithName:name];
 }
 
 - (void)removeFile:(PTFile *)file
 {
-    NSMutableDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
-    NSMutableDictionary *urls = [self.libraryInfo objectForKey:kPTLibraryInfoRequestURLStringsKey];
-    
-    for (int i = 0; i < self.downloadQueue.requestsCount; i++) {
-        ASIHTTPRequest *request = [self.downloadQueue.operations objectAtIndex:i];
-        if ([request.originalURL.absoluteString isEqualToString:[urls objectForKey:file.name]]) {
-            [request cancel];
-            [request removeTemporaryDownloadFile];
-            break;
-        }
+    ASIHTTPRequest *request = [self requestForFile:file];
+    if (request) {
+        [request cancel];
+        [request removeTemporaryDownloadFile];
     }
-
-    [files removeObjectForKey:file.name];
-    [urls removeObjectForKey:file.name];
+    
+    [[self.libraryInfo objectForKey:kPTLibraryInfoFilesKey] removeObjectForKey:file.name];
+    [[self.libraryInfo objectForKey:kPTLibraryInfoRequestURLStringsKey] removeObjectForKey:file.name];
     
     [self saveLibraryInfo];
 
@@ -191,6 +149,60 @@
 {
     NSDictionary *files = [self.libraryInfo objectForKey:kPTLibraryInfoFilesKey];
     return [files objectForKey:name] ? [[PTFile alloc] initWithName:name date:[files objectForKey:name]] : nil;
+}
+
+- (NSMutableDictionary *)libraryInfo
+{
+    if (!_libraryInfo) {
+        _libraryInfo = [[NSMutableDictionary alloc] initWithContentsOfFile:[self.diskCachePath stringByAppendingPathComponent:kPTLibraryInfoFileName]];
+        if (!_libraryInfo) {
+            _libraryInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                            [NSMutableDictionary dictionary], kPTLibraryInfoFilesKey,
+                            [NSMutableDictionary dictionary], kPTLibraryInfoRequestURLStringsKey,
+                            nil];
+        }
+    }
+    
+    return _libraryInfo;
+}
+
+- (void)saveLibraryInfo
+{
+    [self createDirectoryAtPath:self.diskCachePath];
+    
+    NSData *data = [NSPropertyListSerialization dataWithPropertyList:self.libraryInfo format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL];
+    if (data) {
+        [data writeToFile:[self.diskCachePath stringByAppendingPathComponent:kPTLibraryInfoFileName] atomically:YES];
+    }
+}
+
+- (void)createDirectoryAtPath:(NSString *)path
+{
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    if (![fileManager fileExistsAtPath:path]) {
+        [fileManager createDirectoryAtPath:path
+               withIntermediateDirectories:YES
+                                attributes:nil
+                                     error:NULL];
+    }
+}
+
+- (ASIHTTPRequest *)requestForFile:(PTFile *)file
+{
+    NSString *urlString = [[self.libraryInfo objectForKey:kPTLibraryInfoRequestURLStringsKey] objectForKey:file.name];
+    for (ASIHTTPRequest *request in self.downloadQueue.operations) {
+        if ([request.originalURL.absoluteString isEqualToString:urlString]) {
+            return request;
+        }
+    }
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
+    request.userInfo = [NSDictionary dictionaryWithObject:self.downloadQueue forKey:@"queue"];
+    request.temporaryFileDownloadPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:file.name] stringByAppendingPathExtension:@"download"];
+    request.downloadDestinationPath = [self.fileDownloadPath stringByAppendingPathComponent:file.name];
+    request.allowResumeForFileDownloads = YES;
+    request.shouldContinueWhenAppEntersBackground = YES;
+    return request;
 }
 
 @end

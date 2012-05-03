@@ -21,19 +21,13 @@
 
 #import "PTDownloadManager.h"
 
-#define kPTLibraryInfoRequestURLStringsKey      @"urls"
-
 ////////////////////////////////////////////////////////////////////////////////
 // Internal APIs
 ////////////////////////////////////////////////////////////////////////////////
 
 @interface PTDownloadManager ()
 
-@property (nonatomic, readonly) NSString *diskCachePath;
-@property (nonatomic, readonly) NSString *fileDownloadPath;
-
-@property (nonatomic, readonly) NSMutableDictionary *libraryInfo;
-@property (nonatomic, readonly) ASINetworkQueue *downloadQueue;
+- (ASIHTTPRequest *)requestForFile:(PTFile *)file;
 
 @end
 
@@ -43,7 +37,13 @@
 
 @interface PTFile ()
 
+@property UIProgressView *progressView;
+@property UILabel *label;
+@property NSString *savedLabelText;
+
 - (id)initWithName:(NSString *)name date:(NSDate *)date;
+
+- (void)updateStatusForRequest:(ASIHTTPRequest *)request;
 
 @end
 
@@ -51,6 +51,9 @@
 
 @synthesize name = _name;
 @synthesize date = _date;
+@synthesize progressView = _progressView;
+@synthesize label = _label;
+@synthesize savedLabelText = _savedLabelText;
 
 - (id)initWithName:(NSString *)name date:(NSDate *)date
 {
@@ -58,13 +61,14 @@
     if (self) {
         _name = name;
         _date = date;
+        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     }
     return self;
 }
 
 - (NSURL *)contentURL
 {
-    return [NSURL fileURLWithPath:[[[PTDownloadManager sharedManager] fileDownloadPath] stringByAppendingPathComponent:self.name]];
+    return [NSURL fileURLWithPath:[[[PTDownloadManager sharedManager] requestForFile:self] downloadDestinationPath]];
 }
 
 - (PTFileContentStatus)status
@@ -74,14 +78,9 @@
         return PTFileContentStatusAvailable;
     }
     else {
-        NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
-        for (int i = 0; i < [[[PTDownloadManager sharedManager] downloadQueue] requestsCount]; i++) {
-            ASIHTTPRequest *request = [[[[PTDownloadManager sharedManager] downloadQueue] operations] objectAtIndex:i];
-            if ([request.originalURL.absoluteString isEqualToString:[urls objectForKey:self.name]]) {
-                if ([request isExecuting]) {
-                    return PTFileContentStatusDownloading;
-                }
-            }
+        ASIHTTPRequest *request = [[PTDownloadManager sharedManager] requestForFile:self];
+        if (request && request.isExecuting) {
+            return PTFileContentStatusDownloading;
         }
     }
     
@@ -90,56 +89,64 @@
 
 - (NSOperation *)download
 {
-    return [self downloadWithProgressOnView:nil];
-}
-
-- (NSOperation *)downloadWithProgressOnView:(UIView *)view
-{
-    NSMutableDictionary *urls = [[[PTDownloadManager sharedManager] libraryInfo] objectForKey:kPTLibraryInfoRequestURLStringsKey];
+    // Why '__unsafe_unretained'? See: http://stackoverflow.com/questions/4352561/retain-cycle-on-self-with-blocks
+    __unsafe_unretained ASIHTTPRequest *downloadOperation = [[PTDownloadManager sharedManager] requestForFile:self];
+    NSAssert(downloadOperation.userInfo && [downloadOperation.userInfo objectForKey:@"queue"], @"download is currently executing or has already finished executing.");
     
-    ASIHTTPRequest *downloadOperation = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[urls objectForKey:self.name]]];
-    downloadOperation.temporaryFileDownloadPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:self.name] stringByAppendingPathExtension:@"download"];
-    downloadOperation.downloadDestinationPath = [[[PTDownloadManager sharedManager] fileDownloadPath] stringByAppendingPathComponent:self.name];
-    downloadOperation.allowResumeForFileDownloads = YES;
-    downloadOperation.shouldContinueWhenAppEntersBackground = YES;
-    // TODO remove duplicate
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    [downloadOperation setCompletionBlock:^{
-        if (view) {
-            for (UIView *subView in view.subviews) {
-                if ([subView isKindOfClass:[UIProgressView class]]) {
-                    [subView removeFromSuperview];
-                    break;
-                }
-            }
-        }
+    [downloadOperation setStartedBlock:^{
+        [self updateStatusForRequest:downloadOperation];
     }];
     [downloadOperation setFailedBlock:^{
-        if (view) {
-            for (UIView *subView in view.subviews) {
-                if ([subView isKindOfClass:[UIProgressView class]]) {
-                    [subView removeFromSuperview];
-                    break;
-                }
-            }
-        }
+        [self updateStatusForRequest:downloadOperation];
     }];
-    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    [downloadOperation setCompletionBlock:^{
+        [self updateStatusForRequest:downloadOperation];
+    }];
 
-    if (view) {
-        UIProgressView *progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        progressView.frame = CGRectMake(5.0,
-                                        view.bounds.size.height - progressView.frame.size.height - 5.0,
-                                        view.bounds.size.width - 10.0,
-                                        progressView.frame.size.height);
-        [view addSubview:progressView];
+    [downloadOperation setDownloadProgressDelegate:self.progressView];
 
-        [downloadOperation setDownloadProgressDelegate:progressView];
-    }
-
-    [[[PTDownloadManager sharedManager] downloadQueue] addOperation:downloadOperation];
+    [(ASINetworkQueue *)[downloadOperation.userInfo objectForKey:@"queue"] addOperation:downloadOperation];
     
+    // we don't want to expose userInfo externally
+    downloadOperation.userInfo = nil;
+
     return downloadOperation;
+}
+
+- (void)showProgressOnView:(UIView *)view label:(UILabel *)label
+{
+    [self updateStatusForRequest:nil];
+    
+    // TODO give users an option tuning this to any CGFloat value as they wish
+    static CGFloat margin = 5.0;
+    if (view) {
+        self.progressView.frame = CGRectMake(margin,
+                                             view.bounds.size.height - self.progressView.frame.size.height - margin,
+                                             view.bounds.size.width - margin * 2,
+                                             self.progressView.frame.size.height);
+        [view addSubview:self.progressView];
+    }
+    
+    if (label) {
+        self.label = label;
+        self.savedLabelText = label.text;
+    }
+    
+    [self updateStatusForRequest:[[PTDownloadManager sharedManager] requestForFile:self]];
+}
+
+- (void)updateStatusForRequest:(ASIHTTPRequest *)request
+{
+    if (!request || request.isCancelled || request.isFinished) {
+        [self.progressView removeFromSuperview];
+        self.label.text = self.savedLabelText;
+    }
+    else if (request.isExecuting) {
+        self.label.text = NSLocalizedString(@"Loading...", nil);
+    }
+    else if (request.isReady) {
+        self.label.text = NSLocalizedString(@"Waiting...", nil);
+    }
 }
 
 @end
