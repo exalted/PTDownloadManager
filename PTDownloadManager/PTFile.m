@@ -147,6 +147,12 @@
     else if (request.isReady) {
         self.label.text = NSLocalizedString(@"Waiting...", nil);
     }
+    
+    if (request.isFinished) {
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(PTFileDidFinishDownload:)]) {
+            [self.delegate PTFileDidFinishDownload:self];
+        }
+    }
 }
 
 @end

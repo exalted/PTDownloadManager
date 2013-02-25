@@ -16,11 +16,23 @@
 
 #import <UIKit/UIKit.h>
 
+@class PTFile;
+
 typedef enum {
     PTFileContentStatusNone,
     PTFileContentStatusDownloading,
     PTFileContentStatusAvailable,
 } PTFileContentStatus;
+
+#pragma mark - Delegate protocol definition
+
+@protocol PTFileDelegate <NSObject>
+
+@optional
+
+- (void)PTFileDidFinishDownload:(PTFile *)file;
+
+@end
 
 @interface PTFile : NSObject
 
@@ -30,6 +42,8 @@ typedef enum {
 @property (nonatomic, readonly) PTFileContentStatus status;
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSDate *date;
+
+@property (nonatomic, assign) id<PTFileDelegate> delegate;
 
 - (NSOperation *)download;
 - (void)showProgressOnView:(UIView *)view label:(UILabel *)label;
