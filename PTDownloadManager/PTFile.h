@@ -32,7 +32,7 @@ typedef enum {
 
 @optional
 
-- (void)PTFileDidFinishDownload:(PTFile *)file;
+- (void)fileDidFinishDownloading:(PTFile *)file;
 
 @end
 
