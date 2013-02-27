@@ -140,6 +140,10 @@
     if (!request || request.isCancelled || request.isFinished) {
         [self.progressView removeFromSuperview];
         self.label.text = self.savedLabelText;
+        
+        if ([self.delegate respondsToSelector:@selector(fileDidFinishDownloading:)]) {
+            [self.delegate fileDidFinishDownloading:self];
+        }
     }
     else if (request.isExecuting) {
         self.label.text = NSLocalizedString(@"Loading...", nil);
