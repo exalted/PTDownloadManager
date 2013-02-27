@@ -141,7 +141,7 @@
         [self.progressView removeFromSuperview];
         self.label.text = self.savedLabelText;
         
-        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(fileDidFinishDownloading:)]) {
+        if ([self.delegate respondsToSelector:@selector(fileDidFinishDownloading:)]) {
             [self.delegate fileDidFinishDownloading:self];
         }
     }
